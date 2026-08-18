@@ -15,14 +15,14 @@ venv\Scripts\activate          # Windows  (source venv/bin/activate sur Linux/Ma
 pip install -r requirements.txt
 copy .env.example .env         # cp sur Linux/Mac
 python manage.py migrate
-python manage.py seed_products # 12 montres + photos + zones + avis + FAQ + réglages
+python manage.py loaddata reglages  # zones, avis, FAQ, coordonnées (si fixture)
 python manage.py createsuperuser
 python manage.py runserver
 ```
 - API : http://127.0.0.1:8000/api/produits/
 - Admin : http://127.0.0.1:8000/admin/
 
-> Python 3.12 recommandé (Pillow 10.3 n'a pas de wheel pour 3.13).
+> Python 3.12 ou 3.13.
 
 ### Frontend
 ```
@@ -90,8 +90,10 @@ python manage.py import_catalogue --json ... --images ... --refaire-images
 
 Deux tables gouvernent l'ordre d'affichage :
 - `PHOTOS_PRO` — le visuel retouché, en première position (c'est lui qui vend) ;
-- `PHOTOS_REELLES_EN_PLUS` — la photo brute de la pièce avec sa carte de
-  garantie, juste derrière : elle montre ce qui sera réellement livré.
+- `PHOTOS_REELLES_EN_PLUS` — la photo brute de la pièce sur son carton de
+  présentation, juste derrière : elle montre ce qui sera réellement livré.
+  Ce carton liste les fonctions, ce n'est pas un bon de garantie — le
+  fournisseur n'en accorde aucune, et le site n'en promet aucune.
 
 Attention aux noms trompeurs : `WhatsApp Image 2026-08-07 at 23.41.31 (1).jpeg`
 est un **rendu studio**, pas une photo, malgré son nom de fichier.
@@ -267,27 +269,32 @@ des réglages du site.
 
 ## Passer en production
 
-1. Renseigner `backend/.env` :
-   ```
-   DEBUG=False
-   SECRET_KEY=<python -c "import secrets;print(secrets.token_urlsafe(50))">
-   ALLOWED_HOSTS=montror.ci,www.montror.ci
-   CORS_ALLOWED_ORIGINS=https://montror.ci
-   DATABASE_URL=postgres://user:motdepasse@host:5432/montres_db
-   ```
-   Avec `DEBUG=False`, Django refuse de démarrer sans `SECRET_KEY` et active
-   HTTPS strict, HSTS et cookies sécurisés.
-2. `python manage.py migrate && python manage.py collectstatic`
-3. Servir avec `gunicorn config.wsgi` (whitenoise sert les fichiers statiques).
-   Prévoir un stockage persistant pour `media/` (photos produits).
-4. Vérifier : `python manage.py check --deploy` doit être vert.
-5. Frontend : `VITE_API_URL=https://api.montror.ci/api` puis `npm run build`.
+Le pas-à-pas complet est dans **[MISE_EN_LIGNE.md](MISE_EN_LIGNE.md)** :
+Neon (Postgres), Cloudinary (photos), Render (API), Cloudflare (site).
+
+Trois variables sont obligatoires dès que `DEBUG=False`. Django refuse de
+démarrer sans elles, plutôt que de tourner à moitié :
+
+| Variable | Sans elle |
+|---|---|
+| `SECRET_KEY` | sessions et jetons signés avec une clé publiquement connue |
+| `CLOUDINARY_URL` | photos effacées au déploiement suivant |
+| `EMAIL_HOST` | codes de mot de passe écrits dans les journaux du serveur |
+
+Vérifier avant de publier : `python manage.py check --deploy` doit être vert,
+et `python tester_email.py` confirmer que le SMTP répond.
 
 ## Limites connues
 
-- Pas de compte client : le suivi repose sur référence + téléphone.
 - Le paiement Mobile Money reste manuel (Wave / Orange / MTN affichés au
   checkout, encaissement hors ligne). Une intégration CinetPay ou PayDunya
   reste à faire pour un paiement en ligne réel.
 - Pas de notification automatique au client lors d'un changement de statut :
   le client doit consulter la page Suivi (ou être prévenu par WhatsApp).
+- Le numéro de téléphone n'est pas vérifié à l'inscription. S'inscrire avec le
+  numéro d'un autre donne accès à son historique de commandes — nom, articles,
+  montants, aucun moyen de paiement. Choix assumé tant que le règlement se
+  fait à la livraison ; à revoir le jour où le site encaissera en ligne.
+- 26 produits publiés portent des photos de marques déposées (boîte et logo
+  OMEGA notamment). Décision commerciale du propriétaire, documentée ici pour
+  que personne ne la découvre par hasard.
