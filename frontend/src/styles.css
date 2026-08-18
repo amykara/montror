@@ -1,0 +1,442 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * MONTR'OR — design system
+ * Blanc / Noir / Gris clair + accent Gold #C9A227
+ * Typo : Cormorant Garamond (titres) + Jost (texte)
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-gold-foreground: var(--gold-foreground);
+  --color-whatsapp: var(--whatsapp);
+  --color-whatsapp-foreground: var(--whatsapp-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --font-display: "Cormorant Garamond", ui-serif, Georgia, serif;
+  --font-sans: "Jost", ui-sans-serif, system-ui, sans-serif;
+  /* Ombres en deux temps : un contact net très près de l'objet, une diffusion
+     large et douce. C'est ce qui donne l'impression de profondeur. */
+  --shadow-elegant: 0 2px 4px oklch(0 0 0 / 0.04), 0 24px 60px -30px oklch(0 0 0 / 0.28);
+  --shadow-card: 0 1px 2px oklch(0 0 0 / 0.04), 0 12px 32px -22px oklch(0 0 0 / 0.22);
+  --shadow-flottant: 0 2px 6px oklch(0 0 0 / 0.05), 0 30px 70px -35px oklch(0 0 0 / 0.35);
+
+  /* Une seule courbe pour tout le site : les mouvements se ressemblent. */
+  --ease-douce: cubic-bezier(0.22, 0.72, 0.24, 1);
+  --ease-ressort: cubic-bezier(0.34, 1.3, 0.5, 1);
+}
+
+:root {
+  /* Angles adoucis : champs, listes déroulantes et cartes gagnent en douceur
+     sans perdre le caractère du serif. */
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.16 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.16 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.16 0 0);
+  --primary: oklch(0.16 0 0);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.968 0 0);
+  --secondary-foreground: oklch(0.16 0 0);
+  --muted: oklch(0.965 0 0);
+  --muted-foreground: oklch(0.52 0 0);
+  --accent: oklch(0.96 0 0);
+  --accent-foreground: oklch(0.16 0 0);
+  --gold: oklch(0.76 0.155 86);
+  --gold-soft: oklch(0.96 0.045 90);
+  --gold-foreground: oklch(0.16 0 0);
+  --whatsapp: oklch(0.63 0.16 148);
+  --whatsapp-foreground: oklch(1 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(0.916 0 0);
+  --input: oklch(0.916 0 0);
+  --ring: oklch(0.7 0.1 90.5);
+  --chart-1: oklch(0.7 0.1 90.5);
+  --chart-2: oklch(0.16 0 0);
+  --chart-3: oklch(0.52 0 0);
+  --chart-4: oklch(0.8 0.06 90);
+  --chart-5: oklch(0.9 0 0);
+  --sidebar: oklch(0.99 0 0);
+  --sidebar-foreground: oklch(0.16 0 0);
+  --sidebar-primary: oklch(0.16 0 0);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.965 0 0);
+  --sidebar-accent-foreground: oklch(0.16 0 0);
+  --sidebar-border: oklch(0.916 0 0);
+  --sidebar-ring: oklch(0.7 0.1 90.5);
+}
+
+.dark {
+  --background: oklch(0.14 0 0);
+  --foreground: oklch(0.97 0 0);
+  --card: oklch(0.18 0 0);
+  --card-foreground: oklch(0.97 0 0);
+  --popover: oklch(0.18 0 0);
+  --popover-foreground: oklch(0.97 0 0);
+  --primary: oklch(0.97 0 0);
+  --primary-foreground: oklch(0.14 0 0);
+  --secondary: oklch(0.24 0 0);
+  --secondary-foreground: oklch(0.97 0 0);
+  --muted: oklch(0.24 0 0);
+  --muted-foreground: oklch(0.72 0 0);
+  --accent: oklch(0.26 0 0);
+  --accent-foreground: oklch(0.97 0 0);
+  --gold: oklch(0.83 0.16 86);
+  --gold-soft: oklch(0.28 0.04 90);
+  --gold-foreground: oklch(0.14 0 0);
+  --whatsapp: oklch(0.66 0.16 148);
+  --whatsapp-foreground: oklch(0.14 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(0.97 0 0);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 16%);
+  --ring: oklch(0.78 0.11 90.5);
+  --chart-1: oklch(0.78 0.11 90.5);
+  --chart-2: oklch(0.97 0 0);
+  --chart-3: oklch(0.72 0 0);
+  --chart-4: oklch(0.5 0.06 90);
+  --chart-5: oklch(0.3 0 0);
+  --sidebar: oklch(0.18 0 0);
+  --sidebar-foreground: oklch(0.97 0 0);
+  --sidebar-primary: oklch(0.78 0.11 90.5);
+  --sidebar-primary-foreground: oklch(0.14 0 0);
+  --sidebar-accent: oklch(0.26 0 0);
+  --sidebar-accent-foreground: oklch(0.97 0 0);
+  --sidebar-border: oklch(1 0 0 / 12%);
+  --sidebar-ring: oklch(0.78 0.11 90.5);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+  }
+
+  /* Les grands titres serrent davantage : c'est ce qui fait « magazine ». */
+  h1 {
+    letter-spacing: -0.03em;
+  }
+
+  /* Chiffres de prix alignés et de largeur fixe : les colonnes ne dansent pas. */
+  .prix,
+  th,
+  td {
+    font-variant-numeric: tabular-nums;
+  }
+
+  ::selection {
+    background: var(--color-gold);
+    color: var(--color-gold-foreground);
+  }
+
+  /* Barre de défilement discrète, dans les tons du site. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklch, var(--color-gold) 45%, transparent) transparent;
+  }
+
+  /* On respecte le réglage système : pas d'animation pour qui n'en veut pas. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ---------- Animations réutilisables ---------- */
+
+@keyframes monter {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes apparaitre {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes lueur-or {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.75;
+  }
+}
+
+/* Trait qui se déroule sous les titres de section. */
+@keyframes trait {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/*
+ * Révélation au défilement, sans une ligne de JavaScript.
+ *
+ * `animation-timeline: view()` lie l'animation à l'entrée de l'élément dans
+ * l'écran. Là où ce n'est pas supporté, la règle est simplement ignorée et le
+ * contenu s'affiche normalement — c'est le point important : le texte ne
+ * dépend plus de l'hydratation pour être visible. Avec une animation pilotée
+ * par JS, le HTML sortait du serveur en `opacity:0` et le visiteur voyait une
+ * page blanche tant que le script n'avait pas tourné.
+ */
+@utility revele {
+  @supports (animation-timeline: view()) {
+    animation-name: monter;
+    /* `auto` est indispensable : le raccourci `animation` fixerait la durée à
+       0s et l'animation resterait bloquée sur son image de départ. */
+    animation-duration: auto;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: view();
+    /* L'élément est révélé entre le moment où il entre par le bas et celui où
+       il a parcouru un quart de l'écran. */
+    animation-range: entry 0% entry 85%;
+  }
+}
+
+/* Décalage en cascade pour les grilles : chaque rang finit un peu plus tard. */
+@utility revele-1 {
+  @supports (animation-timeline: view()) {
+    animation-range: entry 0% entry 95%;
+  }
+}
+@utility revele-2 {
+  @supports (animation-timeline: view()) {
+    animation-range: entry 5% cover 8%;
+  }
+}
+@utility revele-3 {
+  @supports (animation-timeline: view()) {
+    animation-range: entry 10% cover 12%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .revele {
+    animation: none !important;
+  }
+}
+
+@utility eyebrow {
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-muted-foreground);
+}
+
+@utility gold-rule {
+  height: 1px;
+  width: 3.5rem;
+  background: linear-gradient(90deg, var(--color-gold), transparent);
+  transform-origin: left;
+  animation: trait 0.9s var(--ease-douce) both;
+}
+
+/* Titre de section : intitulé discret, titre serif, trait doré. */
+@utility titre-section {
+  font-size: clamp(1.85rem, 1.2rem + 2vw, 3rem);
+  line-height: 1.05;
+}
+
+/* Lien dont le soulignement se déroule au survol. */
+@utility lien-souligne {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    height: 1px;
+    width: 100%;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s var(--ease-douce);
+  }
+  &:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+/* Bandeau de marques qui défile sans fin. */
+@keyframes defile {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@utility ruban-marques {
+  display: flex;
+  width: max-content;
+  animation: defile 38s linear infinite;
+  &:hover {
+    animation-play-state: paused;
+  }
+}
+
+@utility hover-lift {
+  transition:
+    transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.5s ease;
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-elegant);
+  }
+}
+
+/* Carte produit : décollement léger au survol, cadre qui vire à l'or. */
+@utility carte-produit {
+  border-radius: 1rem;
+  overflow: hidden;
+  transition:
+    transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.45s ease,
+    border-color 0.3s ease;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-card);
+    border-color: color-mix(in oklch, var(--color-gold) 55%, transparent);
+  }
+}
+
+/* Quand la barre d'achat mobile apparaît, le bouton WhatsApp flottant remonte
+   au-dessus d'elle : les deux restent utilisables sans se chevaucher. */
+body:has(.barre-achat-visible) .bouton-whatsapp-flottant {
+  transform: translateY(-4.75rem);
+}
+
+/* Champ de recherche : plus haut, anneau doré discret à la saisie. */
+@utility champ-recherche {
+  border-radius: 999px;
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+  &:focus-visible {
+    border-color: var(--color-gold);
+    box-shadow: 0 0 0 4px color-mix(in oklch, var(--color-gold) 18%, transparent);
+    outline: none;
+  }
+}
+
+
+/* ---------- Diaporama du hero ---------- */
+
+/* Chaque image apparaît, zoome lentement, puis s'efface. Les délais négatifs
+   décalent les vues sans les faire attendre au premier affichage. */
+@keyframes diaporama {
+  0%   { opacity: 0; transform: scale(1.02); }
+  6%   { opacity: 1; }
+  30%  { opacity: 1; }
+  36%  { opacity: 0; transform: scale(1.14); }
+  100% { opacity: 0; transform: scale(1.02); }
+}
+
+@utility vue-hero {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  animation: diaporama 21s var(--ease-douce) infinite;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vue-hero {
+    animation: none;
+  }
+  .vue-hero:first-of-type {
+    opacity: 1;
+  }
+}

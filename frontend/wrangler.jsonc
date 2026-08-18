@@ -1,0 +1,29 @@
+{
+  // Configuration du Worker Cloudflare qui sert le site.
+  //
+  // Sans ce fichier, Nitro invente un nom à chaque construction
+  // (« tanstack-start-ts »), et l'URL publique changerait d'un déploiement à
+  // l'autre. On le fixe donc ici.
+  //
+  // Le rendu du site se fait côté serveur : ce n'est pas un site statique,
+  // d'où le Worker plutôt qu'un simple hébergement de fichiers.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "montror",
+  "main": ".output/server/index.mjs",
+  "compatibility_date": "2026-08-15",
+  // Nitro s'appuie sur des modules Node (crypto, buffer) que le moteur
+  // Cloudflare n'expose pas sans ce drapeau.
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "binding": "ASSETS",
+    "directory": ".output/public"
+  },
+  "observability": {
+    // Les journaux d'erreur restent consultables dans le tableau de bord
+    // Cloudflare : sans ça, une page blanche en production reste inexpliquée.
+    "enabled": true
+  }
+  // VITE_API_URL n'est pas ici : elle est lue à la construction, pas à
+  // l'exécution. Elle se renseigne dans les réglages de build Cloudflare
+  // (ou dans .env avant `npm run build`).
+}

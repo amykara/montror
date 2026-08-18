@@ -1,0 +1,65 @@
+# ---------------------------------------------------------------------------
+# Secrets — à ne JAMAIS envoyer sur GitHub
+# ---------------------------------------------------------------------------
+# `.env` contient le mot de passe d'application Gmail, la chaîne Postgres et
+# la clé Cloudinary. Un dépôt privé ne suffit pas : ces valeurs se retrouvent
+# dans l'historique pour toujours, même après suppression du fichier.
+.env
+.env.*
+!.env.example
+
+# ---------------------------------------------------------------------------
+# Python / Django
+# ---------------------------------------------------------------------------
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Base locale : en production c'est Postgres (Neon) qui prend le relais, et
+# ce fichier contient de vraies commandes clients.
+db.sqlite3
+db.sqlite3-journal
+
+# Généré par collectstatic à chaque déploiement.
+staticfiles/
+
+# Photos et vidéos des produits. Elles vivent chez Cloudinary une fois la
+# commande `envoyer_medias` passée ; les garder ici alourdirait le dépôt de
+# 57 Mo sans aucun bénéfice.
+media/
+
+# ---------------------------------------------------------------------------
+# Frontend
+# ---------------------------------------------------------------------------
+node_modules/
+.output/
+.nitro/
+.wrangler/
+dist/
+*.local
+
+# Fichiers de routes régénérés à chaque build.
+src/routeTree.gen.ts
+
+# ---------------------------------------------------------------------------
+# Divers
+# ---------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+
+# ---------------------------------------------------------------------------
+# Ancien projet abandonné
+# ---------------------------------------------------------------------------
+# Une première version du site (Next.js) est restée dans un sous-dossier
+# portant le même nom que le projet. Elle pèse 343 Mo, embarque son propre
+# environnement virtuel et son propre cache de compilation. Rien n'en dépend :
+# le site actuel est dans frontend/ et backend/.
+/montres-shop/
+
+# Cache de compilation Next.js, au cas où.
+.next/
