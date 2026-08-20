@@ -291,10 +291,9 @@ et `python tester_email.py` confirmer que le SMTP répond.
   reste à faire pour un paiement en ligne réel.
 - Pas de notification automatique au client lors d'un changement de statut :
   le client doit consulter la page Suivi (ou être prévenu par WhatsApp).
-- Le numéro de téléphone n'est pas vérifié à l'inscription. S'inscrire avec le
-  numéro d'un autre donne accès à son historique de commandes — nom, articles,
-  montants, aucun moyen de paiement. Choix assumé tant que le règlement se
-  fait à la livraison ; à revoir le jour où le site encaissera en ligne.
-- 26 produits publiés portent des photos de marques déposées (boîte et logo
-  OMEGA notamment). Décision commerciale du propriétaire, documentée ici pour
-  que personne ne la découvre par hasard.
+- L'identification du client repose sur son numéro de téléphone, sans
+  vérification par code. Suffisant tant que le règlement se fait à la
+  livraison et qu'aucun moyen de paiement n'est conservé ; à renforcer le jour
+  où le site encaissera en ligne.
+- Certains visuels fournisseur demandent un arbitrage avant publication. Voir
+  le champ `note_interne` de chaque produit dans l'admin.
