@@ -140,15 +140,39 @@ function extraireMessages(payload: unknown): string[] {
   return [];
 }
 
+/**
+ * Délais d'abandon.
+ *
+ * Sans limite, une requête attend indéfiniment. C'est invisible en
+ * développement et désastreux en ligne : l'hébergement gratuit endort l'API
+ * après 15 minutes, et le rendu serveur du site restait alors bloqué ~50 s
+ * avant d'échouer — le visiteur voyait une page blanche, puis rien.
+ *
+ * Mieux vaut renoncer vite et afficher le site en mode dégradé : il se
+ * recharge tout seul dès que l'API répond (voir ReveilServeur).
+ */
+const DELAI_LECTURE = 8_000;
+/** Plus long pour les écritures : abandonner une commande à mi-chemin
+ *  laisserait le client sans savoir si elle est passée. */
+const DELAI_ECRITURE = 25_000;
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   let res: Response;
+  const ecriture = (init?.method ?? "GET").toUpperCase() !== "GET";
   try {
     res = await fetch(`${API_URL}${path}`, {
       ...init,
+      signal: AbortSignal.timeout(ecriture ? DELAI_ECRITURE : DELAI_LECTURE),
       headers: { Accept: "application/json", ...(init?.headers ?? {}) },
     });
-  } catch {
-    throw new ApiError("Impossible de joindre le serveur. Vérifiez votre connexion.", 0);
+  } catch (err) {
+    const expire = err instanceof DOMException && err.name === "TimeoutError";
+    throw new ApiError(
+      expire
+        ? "Le serveur met trop de temps à répondre. Il se réveille peut-être, réessayez."
+        : "Impossible de joindre le serveur. Vérifiez votre connexion.",
+      0,
+    );
   }
 
   if (!res.ok) {

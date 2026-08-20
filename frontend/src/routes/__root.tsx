@@ -16,6 +16,7 @@ import { SETTINGS_FALLBACK, SiteDataProvider, type SiteData } from "@/lib/catalo
 import { CompteProvider } from "@/lib/compte";
 import { ShopProvider } from "@/lib/shop";
 import { SiteHeader } from "@/components/site-header";
+import { ReveilServeur } from "@/components/reveil-serveur";
 import { RubanMarques } from "@/components/ruban-marques";
 import { SiteFooter } from "@/components/site-footer";
 import { WhatsAppFab } from "@/components/whatsapp-fab";
@@ -168,11 +169,7 @@ function RootComponent() {
             <div className="flex min-h-screen flex-col">
               <SiteHeader />
               <RubanMarques />
-              {siteData.apiIndisponible && (
-                <p className="bg-destructive/10 px-4 py-2 text-center text-sm text-destructive">
-                  Le catalogue est momentanément indisponible. Réessayez dans quelques instants.
-                </p>
-              )}
+              {siteData.apiIndisponible && <ReveilServeur />}
               <main className="flex-1">
                 {/* Required: nested routes render here. */}
                 <Outlet />
