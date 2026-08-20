@@ -5,6 +5,7 @@ from django.db import transaction
 from django.db.models import F
 from rest_framework import serializers
 
+from .alertes import prevenir_nouvelle_commande
 from .models import (
     Category, ContactMessage, DeliveryZone, Faq, JumiaPickupPoint, Order,
     OrderItem, Product, ProductImage, Review, SiteSettings,
@@ -234,6 +235,12 @@ class OrderCreateSerializer(serializers.ModelSerializer):
         if acompte:
             order.acompte_fcfa = acompte
             order.save(update_fields=["acompte_fcfa"])
+
+        # Prevenir la boutique. `on_commit` plutot qu'ici directement : si la
+        # transaction echouait apres coup, un e-mail annoncerait une commande
+        # qui n'existe pas. Et l'echec de l'envoi ne remonte jamais jusqu'au
+        # client — sa commande est prise, c'est ce qui compte.
+        transaction.on_commit(lambda: prevenir_nouvelle_commande(order))
 
         return order
 

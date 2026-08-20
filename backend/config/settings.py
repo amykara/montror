@@ -263,6 +263,10 @@ if not DEBUG:
 # avec un autre projet, le client doit reconnaître qui lui écrit.
 NOM_BOUTIQUE = os.getenv("NOM_BOUTIQUE", "MONTR'OR").strip()
 
+# Rappele dans les alertes de commande : sans le lien, il faut aller
+# chercher l'adresse de l'admin quelque part.
+URL_ADMIN = os.getenv("URL_ADMIN", "http://127.0.0.1:8000/admin/").strip()
+
 # E-mail : sert à confirmer l'adresse d'un client et surtout à lui permettre
 # de récupérer son mot de passe. Sans SMTP configuré, Django écrit les
 # messages dans la console : pratique en développement, désastreux en ligne —

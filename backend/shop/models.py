@@ -435,6 +435,14 @@ class SiteSettings(models.Model):
         default=800,
         help_text="Frais facturés pour un retrait en point relais Jumia",
     )
+    # Reglable ici et non dans les variables d'environnement : changer
+    # d'adresse ne doit pas demander un redeploiement.
+    email_alertes = models.EmailField(
+        blank=True,
+        help_text="Adresse prévenue à chaque nouvelle commande. "
+                  "Laisser vide pour ne recevoir aucun message. "
+                  "Différente de l'e-mail de contact affiché sur le site.",
+    )
 
     class Meta:
         verbose_name = "Réglages du site"
