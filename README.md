@@ -1,5 +1,14 @@
 # MONTR'OR — boutique de montres
 
+**En ligne :** https://montror.missdiana944.workers.dev
+· [API](https://montror-api.onrender.com/api/)
+· [admin](https://montror-api.onrender.com/admin/)
+
+Le site (Cloudflare Workers) et l'API (Render) sont deux services distincts.
+La base est chez Neon, les photos chez Cloudinary. Voir
+[MISE_EN_LIGNE.md](MISE_EN_LIGNE.md).
+
+
 Frontend TanStack Start + React + Tailwind (template Lovable), branché sur un
 backend Django/DRF qui est la **source de vérité** : catalogue, photos, stocks,
 zones de livraison, commandes, avis, FAQ, coordonnées et messages de contact.

@@ -1,5 +1,17 @@
 # Mettre MONTR'OR en ligne — gratuitement
 
+> **C'est fait.** Le site tourne depuis le 20 août 2026 :
+>
+> | | |
+> |---|---|
+> | Boutique | https://montror.missdiana944.workers.dev |
+> | API | https://montror-api.onrender.com/api/ |
+> | Admin | https://montror-api.onrender.com/admin/ |
+> | Code | https://github.com/amykara/montror |
+>
+> Ce document reste la marche à suivre pour refaire la manœuvre — nouvel
+> hébergeur, second site, ou remise en route après un incident.
+
 Quatre comptes à créer, aucune carte bancaire. Comptez une heure la première
 fois.
 
@@ -61,7 +73,7 @@ Sans cette étape, toutes vos fiches produit s'afficheraient sans image.
 | `DATABASE_URL` | la chaîne Neon de l'étape 1 |
 | `CLOUDINARY_URL` | la chaîne Cloudinary de l'étape 2 |
 | `ALLOWED_HOSTS` | `montror-api.onrender.com` |
-| `CORS_ALLOWED_ORIGINS` | `https://montror.workers.dev` *(voir étape 4)* |
+| `CORS_ALLOWED_ORIGINS` | `https://montror.missdiana944.workers.dev` *(voir étape 4)* |
 | `CSRF_TRUSTED_ORIGINS` | idem |
 | `EMAIL_HOST_USER` | votre adresse Gmail |
 | `EMAIL_HOST_PASSWORD` | le **mot de passe d'application** Google |
@@ -96,7 +108,7 @@ npm run deploy
 ```
 
 Wrangler ouvre votre navigateur pour l'autorisation, puis publie sur
-`https://montror.<votre-compte>.workers.dev`.
+`https://montror.missdiana944.workers.dev`.
 
 3. **Retournez sur Render** et corrigez `CORS_ALLOWED_ORIGINS` et
    `CSRF_TRUSTED_ORIGINS` avec cette URL exacte. Sans ça, le navigateur
