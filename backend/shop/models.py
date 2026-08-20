@@ -9,7 +9,7 @@ from django.utils.text import slugify
 
 class Category(models.Model):
     name = models.CharField(max_length=80)
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(max_length=100, unique=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -78,7 +78,11 @@ class Product(models.Model):
     ]
 
     nom = models.CharField(max_length=150)
-    slug = models.SlugField(unique=True, blank=True)
+    # 120 et non les 50 par defaut : le slug reprend le nom complet plus la
+    # reference (« matturi-chronographe-acier-argente-cadran-bleu-nuit-mo-018 »).
+    # SQLite ignorait la limite, Postgres la fait respecter — 35 produits
+    # etaient concernes. Tronquer aurait abime des URL utiles au referencement.
+    slug = models.SlugField(max_length=120, unique=True, blank=True)
     reference = models.CharField(max_length=50, unique=True)
     marque = models.CharField(max_length=80, blank=True)
     style = models.CharField(max_length=20, choices=STYLE_CHOICES, blank=True)
