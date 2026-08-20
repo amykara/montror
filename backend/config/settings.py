@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import parse_qsl, unquote, urlparse
 
 from dotenv import load_dotenv
 
@@ -83,15 +83,31 @@ DATABASE_URL = os.getenv("DATABASE_URL", "").strip()
 
 if DATABASE_URL.startswith("postgres"):
     url = urlparse(DATABASE_URL)
+    # Les hebergeurs Postgres infogeres (Neon, Supabase, Render) refusent les
+    # connexions en clair et ajoutent « ?sslmode=require » a la chaine. Sans
+    # cette lecture, l'option serait perdue et la connexion reposerait sur le
+    # « prefer » par defaut de psycopg2 — silencieux tant que ca marche,
+    # incomprehensible le jour ou ca casse.
+    parametres = dict(parse_qsl(url.query))
+    options = {}
+    if "sslmode" in parametres:
+        options["sslmode"] = parametres["sslmode"]
+    elif url.hostname not in ("localhost", "127.0.0.1", None):
+        options["sslmode"] = "require"
+
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
             "NAME": url.path.lstrip("/"),
-            "USER": url.username or "",
-            "PASSWORD": url.password or "",
+            "USER": unquote(url.username or ""),
+            "PASSWORD": unquote(url.password or ""),
             "HOST": url.hostname or "",
             "PORT": str(url.port or ""),
+            # Connexions reutilisees 10 min : ouvrir une session Postgres a
+            # chaque requete coute plus cher que la requete elle-meme.
             "CONN_MAX_AGE": 600,
+            "CONN_HEALTH_CHECKS": True,
+            "OPTIONS": options,
         }
     }
 else:
