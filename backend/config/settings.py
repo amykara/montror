@@ -281,17 +281,26 @@ EMAIL_TIMEOUT = 10
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "") or (
     EMAIL_HOST_USER or "no-reply@localhost"
 )
-EMAIL_BACKEND = (
-    "django.core.mail.backends.smtp.EmailBackend"
-    if EMAIL_HOST
-    else "django.core.mail.backends.console.EmailBackend"
-)
+# Brevo passe par HTTPS et non par SMTP. C'est indispensable en ligne :
+# l'offre gratuite de Render ferme les ports SMTP sortants (25, 465, 587)
+# pour se prémunir des abus. Un envoi Gmail y échoue systématiquement sur
+# « [Errno 101] Network is unreachable », quels que soient les identifiants.
+# Le port 443, lui, reste ouvert.
+BREVO_API_KEY = os.getenv("BREVO_API_KEY", "").strip()
 
-if not EMAIL_HOST and not DEBUG:
+if BREVO_API_KEY:
+    EMAIL_BACKEND = "shop.courriel_brevo.BackendBrevo"
+elif EMAIL_HOST:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+if not BREVO_API_KEY and not EMAIL_HOST and not DEBUG:
     raise RuntimeError(
-        "EMAIL_HOST doit être renseigné quand DEBUG=False : sans lui, les "
-        "codes de récupération de mot de passe s'écriraient dans les journaux "
-        "du serveur au lieu de partir chez le client."
+        "Aucun moyen d'envoyer un e-mail n'est configuré (ni BREVO_API_KEY ni "
+        "EMAIL_HOST) : les codes de récupération de mot de passe et les "
+        "alertes de commande s'écriraient dans les journaux du serveur au "
+        "lieu de partir chez le destinataire."
     )
 
 LOGGING = {

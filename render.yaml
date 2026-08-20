@@ -41,7 +41,13 @@ services:
         sync: false
       - key: CSRF_TRUSTED_ORIGINS # même valeur que ci-dessus
         sync: false
-      # --- e-mail (mot de passe oublié) ---
+      # --- e-mail ---
+      # Render ferme les ports SMTP sortants sur l'offre gratuite :
+      # un envoi Gmail y echoue sur « Network is unreachable ». Brevo
+      # passe par HTTPS, qui reste ouvert. C'est donc BREVO_API_KEY
+      # qui compte ici ; les variables EMAIL_* ne servent qu'en local.
+      - key: BREVO_API_KEY
+        sync: false
       - key: EMAIL_HOST
         value: smtp.gmail.com
       - key: EMAIL_PORT
