@@ -56,3 +56,7 @@ services:
         sync: false
       - key: NOM_BOUTIQUE
         value: MONTR'OR
+      # Rappelé dans les alertes de commande, pour ouvrir l'admin d'un
+      # clic depuis son téléphone au lieu de chercher l'adresse.
+      - key: URL_ADMIN
+        value: https://montror-api.onrender.com/admin/
