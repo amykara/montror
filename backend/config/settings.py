@@ -263,9 +263,23 @@ if not DEBUG:
 # avec un autre projet, le client doit reconnaître qui lui écrit.
 NOM_BOUTIQUE = os.getenv("NOM_BOUTIQUE", "MONTR'OR").strip()
 
-# Rappele dans les alertes de commande : sans le lien, il faut aller
-# chercher l'adresse de l'admin quelque part.
-URL_ADMIN = os.getenv("URL_ADMIN", "http://127.0.0.1:8000/admin/").strip()
+# Adresse de l'admin, rappelee dans les alertes de commande.
+#
+# Deduite d'ALLOWED_HOSTS plutot que saisie a part : une variable de plus,
+# c'est une variable qu'on oublie de renseigner en ligne — et le lien renvoyait
+# alors vers 127.0.0.1, l'ordinateur du destinataire. Ici, elle est juste par
+# construction, partout ou le site tourne.
+def _url_admin() -> str:
+    manuel = os.getenv("URL_ADMIN", "").strip()
+    if manuel:
+        return manuel
+    hote = next((h for h in ALLOWED_HOSTS if h not in ("localhost", "127.0.0.1", "*")), "")
+    if hote:
+        return f"https://{hote}/admin/"
+    return "http://127.0.0.1:8000/admin/"
+
+
+URL_ADMIN = _url_admin()
 
 # E-mail : sert à confirmer l'adresse d'un client et surtout à lui permettre
 # de récupérer son mot de passe. Sans SMTP configuré, Django écrit les
