@@ -157,7 +157,10 @@ export function CarteEmail({
           </div>
           <div className="mt-2 flex items-center justify-between gap-3">
             <p className="text-xs text-muted-foreground">
-              Envoyé à {saisie}. Valable 15 minutes — pensez à regarder les indésirables.
+              Envoyé à {saisie}, valable 15 minutes.{" "}
+              <span className="text-foreground">
+                Rien reçu ? Regardez dans vos indésirables.
+              </span>
             </p>
             <button
               onClick={() => void demander()}

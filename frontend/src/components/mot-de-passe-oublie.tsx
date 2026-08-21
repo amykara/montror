@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Inbox } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -125,7 +125,22 @@ export function MotDePasseOublie({
         <>
           <p className="mt-6 rounded-xl border border-gold/40 bg-gold-soft/50 p-4 text-sm text-muted-foreground">
             Si ce compte existe, un code de 6 chiffres vient d'être envoyé à son
-            adresse e-mail. Valable 15 minutes — pensez à regarder les indésirables.
+            adresse e-mail. Il est valable 15 minutes.
+          </p>
+
+          {/* Mention detachee et non noyee en fin de phrase : l'expediteur est
+              une adresse Gmail signee par un tiers, ce que les messageries
+              classent volontiers en indesirables. C'est la premiere raison
+              pour laquelle un client croit n'avoir rien recu. */}
+          <p className="mt-3 flex items-start gap-2.5 rounded-xl bg-muted/60 p-4 text-sm">
+            <Inbox className="mt-0.5 size-4 shrink-0 text-gold" />
+            <span>
+              <strong className="font-medium">Vous ne voyez rien arriver ?</strong>{" "}
+              <span className="text-muted-foreground">
+                Regardez dans vos courriers indésirables ou vos spams — c'est là
+                que le message atterrit le plus souvent la première fois.
+              </span>
+            </span>
           </p>
           <div className="mt-6 space-y-4">
             <div>
