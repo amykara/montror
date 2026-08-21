@@ -134,7 +134,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Jost:wght@300;400;500;600&display=swap",
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      // Le SVG d'abord : net a toutes les tailles, et il s'adapte au futur
+      // sans qu'on ait a regenerer des images. Le .ico reste en second pour
+      // les navigateurs qui l'ignorent — sans lui, certains iraient chercher
+      // /favicon.ico tout seuls et ressortiraient l'ancienne icone du cache.
+      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+      { rel: "icon", href: "/favicon.ico", sizes: "48x48" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
     ],
   }),
   shellComponent: RootShell,

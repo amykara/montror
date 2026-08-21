@@ -125,13 +125,6 @@ export function SiteHeader() {
         <ChampRecherche className="hidden min-w-0 flex-1 lg:block" />
 
         <div className="ml-auto flex shrink-0 items-center gap-1 lg:ml-0">
-          {/* Groupe « réglages », séparé des actions d'achat par un filet. */}
-          <button onClick={toggle} aria-label="Changer de thème" className={cn(iconeAction, "hidden sm:grid")}>
-            {theme === "dark" ? <Sun className="size-[1.15rem]" /> : <Moon className="size-[1.15rem]" />}
-          </button>
-
-          <span className="mx-1.5 hidden h-6 w-px bg-border sm:block" aria-hidden />
-
           {/* Compte : bouton nommé quand on est déconnecté, pastille aux
               initiales quand la session est ouverte. Les deux états ne peuvent
               plus être confondus. */}
@@ -193,6 +186,14 @@ export function SiteHeader() {
               </Link>
             )}
           </div>
+
+          {/* Le filet separe l'identite (compte) des actions repetees :
+              theme, favoris, panier. */}
+          <span className="mx-1 h-6 w-px bg-border" aria-hidden />
+
+          <button onClick={toggle} aria-label="Changer de thème" className={iconeAction}>
+            {theme === "dark" ? <Sun className="size-[1.15rem]" /> : <Moon className="size-[1.15rem]" />}
+          </button>
 
           <Link to="/favoris" aria-label="Mes favoris" className={iconeAction}>
             <Heart className="size-[1.15rem]" />
@@ -307,13 +308,6 @@ export function SiteHeader() {
                 Connexion / créer un compte
               </Link>
             )}
-            <button
-              onClick={toggle}
-              aria-label="Changer de thème"
-              className="grid size-9 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-muted sm:hidden"
-            >
-              {theme === "dark" ? <Sun className="size-[1.05rem]" /> : <Moon className="size-[1.05rem]" />}
-            </button>
           </div>
 
           {/* Numéro de la boutique. Il est nommé : sans son libellé, juste

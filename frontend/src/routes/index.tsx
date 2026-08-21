@@ -214,11 +214,12 @@ function Home() {
               <Button
                 asChild
                 size="lg"
-                className="h-14 rounded-full bg-gold px-9 text-base tracking-wide text-gold-foreground shadow-elegant transition-transform duration-300 hover:scale-[1.03] hover:bg-gold/90"
+                className="bouton-vedette group h-14 rounded-full bg-gold px-9 text-base tracking-wide text-gold-foreground shadow-elegant transition-transform duration-300 hover:scale-[1.03] hover:bg-gold/90"
               >
                 <Link to="/catalogue">
                   Découvrir la collection
-                  <ArrowRight className="ml-2.5 size-5" />
+                  {/* La flèche avance au survol : elle annonce où mène le clic. */}
+                  <ArrowRight className="ml-2.5 size-5 transition-transform duration-300 group-hover:translate-x-1" />
                 </Link>
               </Button>
               <Button

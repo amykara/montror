@@ -440,3 +440,72 @@ body:has(.barre-achat-visible) .bouton-whatsapp-flottant {
     opacity: 1;
   }
 }
+
+
+/* ---------- Bouton principal du hero ---------- */
+
+/* Un reflet traverse lentement le bouton, comme la lumière sur un boîtier
+   d'acier poli. Le geste est thématique plutôt que décoratif : c'est ce que
+   fait une montre qu'on incline sous la lumière.
+
+   Pourquoi lent et espacé — 4,5 s de cycle dont l'essentiel en pause : un
+   clignotement rapide fait « publicité » et fatigue au bout de deux passages.
+   Ici l'œil est ramené vers le bouton sans que la page devienne agitée. */
+@keyframes reflet-bouton {
+  0%   { transform: translateX(-140%) skewX(-18deg); }
+  22%  { transform: translateX(240%) skewX(-18deg); }
+  100% { transform: translateX(240%) skewX(-18deg); }
+}
+
+/* Halo qui respire, à peine perceptible : donne du relief au bouton sur les
+   photos sombres du hero, où un aplat doré peut se fondre dans le décor. */
+@keyframes halo-bouton {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklch, var(--color-gold) 42%, transparent); }
+  50%      { box-shadow: 0 0 0 12px color-mix(in oklch, var(--color-gold) 0%, transparent); }
+}
+
+@utility bouton-vedette {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  animation: halo-bouton 3.2s ease-out infinite;
+
+  /* Le reflet lui-même : une bande claire posée au-dessus du fond doré. */
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 45%;
+    background: linear-gradient(
+      100deg,
+      transparent,
+      color-mix(in oklch, white 55%, transparent),
+      transparent
+    );
+    animation: reflet-bouton 4.5s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  /* Au survol, le reflet s'efface : la personne a déjà trouvé le bouton,
+     l'animation n'a plus rien à lui dire et gênerait la lecture. */
+  &:hover {
+    animation: none;
+  }
+  &:hover::after {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+/* Certaines personnes règlent leur système pour supprimer les animations —
+   troubles vestibulaires, migraines. On respecte ce choix : le bouton reste
+   parfaitement visible sans bouger. */
+@media (prefers-reduced-motion: reduce) {
+  .bouton-vedette,
+  .bouton-vedette::after {
+    animation: none;
+  }
+  .bouton-vedette::after {
+    opacity: 0;
+  }
+}
