@@ -12,6 +12,7 @@ from .views import (
     CategoryViewSet, ContactMessageCreateView, DeliveryZoneViewSet, FaqListView,
     JumiaPickupPointViewSet,
     OrderCreateView, OrderTrackingView, ProductViewSet, ReviewListView, SiteSettingsView,
+    VisiteView,
 )
 
 router = DefaultRouter()
@@ -28,6 +29,7 @@ urlpatterns = [
     path("faq/", FaqListView.as_view(), name="faq-liste"),
     path("reglages/", SiteSettingsView.as_view(), name="reglages-site"),
     path("contact/", ContactMessageCreateView.as_view(), name="contact-creer"),
+    path("visite/", VisiteView.as_view(), name="visite"),
     path("compte/inscription/", InscriptionView.as_view(), name="compte-inscription"),
     path("compte/connexion/", ConnexionView.as_view(), name="compte-connexion"),
     path("compte/deconnexion/", DeconnexionView.as_view(), name="compte-deconnexion"),

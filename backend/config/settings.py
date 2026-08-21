@@ -213,6 +213,7 @@ REST_FRAMEWORK = {
         "contact_ip": "40/hour",
         "suivi": "20/hour",         # par référence de commande
         "suivi_ip": "200/hour",
+        "visite_ip": "300/hour",    # comptage de fréquentation
         "auth": "20/hour",          # par numéro de téléphone
         "inscription": "30/hour",   # par IP, contre la création en masse
         "courriel": "8/hour",         # par numéro : envois d’e-mails

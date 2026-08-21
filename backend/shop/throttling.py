@@ -95,3 +95,10 @@ class SuiviParReference(IdentifiantThrottle):
 
 class SuiviParIP(AnonRateThrottle):
     scope = "suivi_ip"
+
+
+class VisiteParIP(AnonRateThrottle):
+    """Plafond large : une même personne consulte facilement quinze fiches
+    d'affilée. Il ne sert qu'à empêcher qu'un script gonfle le compteur."""
+
+    scope = "visite_ip"

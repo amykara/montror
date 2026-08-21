@@ -486,3 +486,33 @@ class ContactMessage(models.Model):
 # les découvre : `makemigrations` n'inspecte que `models.py`.
 from .courriel import CodeCourriel  # noqa: E402,F401
 from .sessions import SessionClient  # noqa: E402,F401
+
+
+class Visite(models.Model):
+    """Fréquentation du site, agrégée par jour.
+
+    Un compteur par jour plutôt qu'une ligne par visite : la table reste
+    minuscule même après des années, et personne n'a besoin de savoir qui est
+    passé — seulement combien. Aucune adresse IP, aucun identifiant n'est
+    conservé, ce qui évite d'avoir à gérer des données personnelles.
+
+    Le décompte vient du navigateur, pas du serveur : les robots de
+    surveillance frappent l'API toutes les cinq minutes sans jamais exécuter
+    de JavaScript, et fausseraient tout un comptage côté serveur.
+    """
+
+    jour = models.DateField("jour", unique=True)
+    # Nombre de personnes : un onglet ouvert compte une fois, quel que soit le
+    # nombre de pages consultées ensuite.
+    visites = models.PositiveIntegerField("visites", default=0)
+    # Nombre de pages vues : deux fois plus de pages que de visites signale
+    # des gens qui explorent, ce qui est bon signe.
+    pages = models.PositiveIntegerField("pages vues", default=0)
+
+    class Meta:
+        ordering = ["-jour"]
+        verbose_name = "fréquentation"
+        verbose_name_plural = "fréquentation"
+
+    def __str__(self):
+        return f"{self.jour:%d/%m/%Y} — {self.visites} visite(s)"

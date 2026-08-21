@@ -4,6 +4,7 @@ from django.utils.html import format_html
 from .models import (
     Category, ContactMessage, DeliveryZone, Faq, JumiaPickupPoint, Order, OrderItem,
     Product, ProductImage, ProductVideo, Review, SiteSettings,
+    Visite,
 )
 
 
@@ -195,3 +196,64 @@ admin.site.register(Category)
 admin.site.site_header = "MONTR'OR — Administration"
 admin.site.site_title = "MONTR'OR"
 admin.site.index_title = "Gestion de la boutique"
+
+
+@admin.register(Visite)
+class VisiteAdmin(admin.ModelAdmin):
+    """Fréquentation du site, jour par jour.
+
+    Tout est en lecture seule : ces chiffres sont constatés, pas saisis. Les
+    laisser modifiables inviterait à les corriger, et un compteur qu'on
+    retouche ne sert plus à rien.
+    """
+
+    list_display = ("jour_affiche", "visites", "pages", "pages_par_visite")
+    ordering = ("-jour",)
+    date_hierarchy = "jour"
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    @admin.display(description="jour", ordering="jour")
+    def jour_affiche(self, obj):
+        jours = ("lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche")
+        return f"{jours[obj.jour.weekday()]} {obj.jour:%d/%m/%Y}"
+
+    @admin.display(description="pages par visite")
+    def pages_par_visite(self, obj):
+        """Au-dessus de 2, les gens explorent le catalogue. Proche de 1, ils
+        arrivent et repartent — signe que la page d'accueil ne retient pas."""
+        if not obj.visites:
+            return "—"
+        return f"{obj.pages / obj.visites:.1f}"
+
+    def changelist_view(self, request, extra_context=None):
+        """Les totaux en haut de page : sans eux, il faut additionner les
+        lignes de tête pour répondre à « combien cette semaine ? »."""
+        from datetime import timedelta
+
+        from django.db.models import Sum
+        from django.utils import timezone
+
+        aujourdhui = timezone.localdate()
+
+        def cumul(depuis=None):
+            qs = Visite.objects.all()
+            if depuis:
+                qs = qs.filter(jour__gte=depuis)
+            r = qs.aggregate(v=Sum("visites"), p=Sum("pages"))
+            return r["v"] or 0, r["p"] or 0
+
+        extra_context = extra_context or {}
+        extra_context["resume_frequentation"] = [
+            ("Aujourd'hui", *cumul(aujourdhui)),
+            ("7 derniers jours", *cumul(aujourdhui - timedelta(days=6))),
+            ("30 derniers jours", *cumul(aujourdhui - timedelta(days=29))),
+            ("Depuis le début", *cumul()),
+        ]
+        return super().changelist_view(request, extra_context)
+
+    change_list_template = "admin/shop/visite/change_list.html"

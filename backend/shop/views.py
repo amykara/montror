@@ -1,11 +1,14 @@
-from django.db.models import Prefetch
+from django.db.models import F, Prefetch
+from django.utils import timezone
 from rest_framework import filters, generics, status, viewsets
+from rest_framework.permissions import AllowAny
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import (
     Category, DeliveryZone, Faq, JumiaPickupPoint, Order, OrderItem,
-    Product, Review, SiteSettings,
+    Product, Review, SiteSettings, Visite,
 )
 from .serializers import (
     CategorySerializer, ContactMessageSerializer, DeliveryZoneSerializer,
@@ -16,7 +19,7 @@ from .serializers import (
 
 from .throttling import (
     CommandeParIP, CommandeParTelephone, ContactParIP, ContactParTelephone,
-    SuiviParIP, SuiviParReference,
+    SuiviParIP, SuiviParReference, VisiteParIP,
 )
 
 
@@ -127,3 +130,32 @@ class OrderTrackingView(generics.GenericAPIView):
             )
 
         return Response(self.get_serializer(commande).data)
+
+
+class VisiteView(APIView):
+    """Enregistre une visite. Appelé par le site à chaque page consultée.
+
+    Aucune authentification : n'importe qui peut incrémenter le compteur. Le
+    risque est assumé — c'est un indicateur de tendance pour la boutique, pas
+    une donnée de facturation, et l'exiger obligerait à identifier les
+    visiteurs, exactement ce qu'on veut éviter.
+    """
+
+    permission_classes = [AllowAny]
+    authentication_classes: list = []
+    throttle_classes = [VisiteParIP]
+
+    def post(self, request):
+        # `nouvelle` distingue l'arrivée sur le site du simple changement de
+        # page : le navigateur ne l'envoie qu'une fois par onglet ouvert.
+        nouvelle = bool(request.data.get("nouvelle"))
+        jour = timezone.localdate()
+
+        # F() plutôt que lire-puis-écrire : deux visiteurs simultanés
+        # incrémenteraient sinon la même valeur et l'un des deux serait perdu.
+        Visite.objects.get_or_create(jour=jour)
+        Visite.objects.filter(jour=jour).update(
+            pages=F("pages") + 1,
+            visites=F("visites") + (1 if nouvelle else 0),
+        )
+        return Response(status=status.HTTP_204_NO_CONTENT)

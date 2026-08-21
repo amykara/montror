@@ -15,6 +15,7 @@ import { fetchFaqs, fetchProducts, fetchReviews, fetchSettings, fetchDeliveryZon
 import { SETTINGS_FALLBACK, SiteDataProvider, type SiteData } from "@/lib/catalog";
 import { CompteProvider } from "@/lib/compte";
 import { ShopProvider } from "@/lib/shop";
+import { useFrequentation } from "@/lib/frequentation";
 import { SiteHeader } from "@/components/site-header";
 import { ReveilServeur } from "@/components/reveil-serveur";
 import { RubanMarques } from "@/components/ruban-marques";
@@ -166,6 +167,11 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const siteData = Route.useLoaderData();
+
+  // Compteur de fréquentation, lu depuis l'administration. Placé ici plutôt
+  // que dans chaque page : une seule ligne couvre tout le site, y compris les
+  // pages ajoutées plus tard.
+  useFrequentation();
 
   return (
     <QueryClientProvider client={queryClient}>
